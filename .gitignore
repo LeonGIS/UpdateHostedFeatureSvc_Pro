@@ -5,6 +5,10 @@
 *.suo
 *.user
 *.sln.docstates
+settings.ini
+settings_inputfiles.ini
+settings_ItemInfo.ini
+/CreateSDDraft/
 
 # Build results
 
