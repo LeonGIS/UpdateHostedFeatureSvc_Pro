@@ -1,9 +1,21 @@
+# ---------------------------------------------------------------------------
+# modAGOL.py
+# Created on: 1/11/2017
+# Leon Scott, Town of Easton, MA
+
+# Description: 
+# Shared functions related to publishing and updating items in ArcGIS Online
+#---------------------------------------------------------------------------
+
 import arcpy
 from arcgis.gis import GIS
 import xml.etree.ElementTree as ET
 import base64
 import os
 
+
+# Function: metadata_to_list
+# Description: Read metadata XML extracted from ArcCatalog
 def metadata_to_list(metadatafile, thumbpath):
     insummary = ""
     incredits = ""
@@ -65,6 +77,9 @@ def metadata_to_list(metadatafile, thumbpath):
     metadatalist = [insummary,incredits,intags,inuselimit]
     return metadatalist
 
+
+# Function: update_featureservice
+# Description: Update feature service item information and sharing
 def update_featureservice(itemsummary, itemcredits, itemuselimits, itemtags, itemdesc, itemthumb_file, itemid, agol_url, agol_user, agol_pass, shared, share_everyone, share_org, share_groups):
     item_properties = {"snippet": itemsummary,
                        "description": itemdesc,
@@ -85,8 +100,8 @@ def update_featureservice(itemsummary, itemcredits, itemuselimits, itemtags, ite
             fs_item.share(everyone = share_everyone, org = share_org, groups = share_groups)
 
 
-
-
+# Function: createSD_and_overwrite
+# Description: Creates a SD file from ArcGIS Pro, then updates an existing SD file in ArcGIS Online.  The new SD file is published.
 def createSD_and_overwrite(aprx_file, map_name, draft_sd, service_name, folder_name, edit_enabled, export_enabled, 
                            itemsummary, itemtags, itemcredits, itemuselimits, final_sd, agol_url, agol_user, agol_pass, sd_itemid ):
     aprx = arcpy.mp.ArcGISProject(aprx_file)
