@@ -1,6 +1,6 @@
 import arcpy
 from arcgis.gis import GIS
-
+import logging
 import os
 import getopt
 import sys
@@ -9,6 +9,15 @@ import contextlib
 
 
 if __name__ == "__main__":
+      # Set up logging
+    LOG_FILENAME = '.\AGOL_UpdateFeatLyr.log'
+    logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s %(levelname)-8s %(message)s',
+                    datefmt='%a, %d %b %Y %H:%M:%S',
+                    filename=LOG_FILENAME,
+                    filemode='w')
+    logging.info("**************************")
+    logging.info("")
 
     # Read command line options
     argv = sys.argv[1:]
@@ -16,7 +25,7 @@ if __name__ == "__main__":
         try:
           opts, args = getopt.getopt(argv,"i:",['inputfile='])
         except getopt.GetoptError:
-          print("Invalid option(s). Syntax: update.py -i <inputfile>")
+          logging.info("Invalid option(s). Syntax: update.py -i <inputfile>")
           sys.exit(2)
     
         for o, a in opts:
@@ -26,12 +35,12 @@ if __name__ == "__main__":
                 assert False, "unhandled option"
 
     else:
-        print("No options found. Syntax: update.py -i <inputfile>")
+        logging.info("No options found. Syntax: update.py -i <inputfile>")
         sys.exit(2)
 
     # Get ini settings file
     if not os.path.isfile(settingsFile): 
-        print("Input file not found. \nMake sure a valid settings file exists.")
+        logging.info("Input file not found. \nMake sure a valid settings file exists.")
         sys.exit()
 
     
@@ -79,13 +88,13 @@ if __name__ == "__main__":
 
     #get ArcPro project & map
     if not os.path.isfile(APRX_FILE): 
-        print("ArcGIS project file not found. \nMake sure a valid file exists.")
+        logging.info("ArcGIS project file not found. \nMake sure a valid file exists.")
         sys.exit()
     aprx = arcpy.mp.ArcGISProject(APRX_FILE)
     
     maplist = aprx.listMaps(MAP_NAME)
     if not maplist:
-        print("Map not found in ArcGIS project file. \nMake sure a valid map exists.")
+        logging.info("Map not found in ArcGIS project file. \nMake sure a valid map exists.")
         sys.exit()           
     m = maplist[0]
    

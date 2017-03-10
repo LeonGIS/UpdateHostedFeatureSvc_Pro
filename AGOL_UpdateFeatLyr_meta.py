@@ -136,8 +136,7 @@ if __name__ == "__main__":
     metadatalist =  modAGOL.metadata_to_list(xmlMetaFile, inthumbnail)
 
     # Create function
-    modAGOL.createSD_and_overwrite(APRX_FILE, MAP_NAME, draftSD, serviceName,folderName, blnediting, blnexport, metadatalist[0], metadatalist[2],  metadatalist[1], metadatalist[3], finalSD,
-                           inputURL, inputUsername, inputPswd, SD_Id)
+    modAGOL.createSD_and_overwrite(APRX_FILE, MAP_NAME, draftSD, serviceName, folderName, blnediting, blnexport, metadatalist[0], metadatalist[2],  metadatalist[1], metadatalist[3], finalSD, inputURL, inputUsername, inputPswd, SD_Id)
    
     logging.info("Created SD and published") 
 
