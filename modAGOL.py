@@ -12,6 +12,8 @@ from arcgis.gis import GIS
 import xml.etree.ElementTree as ET
 import base64
 import os
+import logging
+
 
 
 # Function: metadata_to_list
@@ -104,17 +106,28 @@ def update_featureservice(itemsummary, itemcredits, itemuselimits, itemtags, ite
 # Description: Creates a SD file from ArcGIS Pro, then updates an existing SD file in ArcGIS Online.  The new SD file is published.
 def createSD_and_overwrite(aprx_file, map_name, draft_sd, service_name, folder_name, edit_enabled, export_enabled, 
                            itemsummary, itemtags, itemcredits, itemuselimits, final_sd, agol_url, agol_user, agol_pass, sd_itemid ):
+    logging.info("Start createSD_and_overwrite") 
     aprx = arcpy.mp.ArcGISProject(aprx_file)
     
     maplist = aprx.listMaps(map_name)
     if not maplist:
-        print("Map not found in ArcGIS project file. \nMake sure a valid map exists.")
-        sys.exit()           
+        logging.info("Map not found in ArcGIS project file. \nMake sure a valid map exists.")
+        sys.exit()             
     m = maplist[0]
+    logging.info("Map found")
 
-    # create sd file   
-    arcpy.mp.CreateWebLayerSDDraft(m, draft_sd, service_name, 'MY_HOSTED_SERVICES', 'FEATURE_ACCESS', folder_name, enable_editing = edit_enabled, allow_exporting = export_enabled, summary=itemsummary, tags = itemtags, credits = itemcredits, use_limitations = itemuselimits)
-    arcpy.StageService_server(draft_sd, final_sd)
+    # create sd file
+    try:
+        logging.info("SDDraft: " + draft_sd)
+        logging.info("Service: " + service_name)
+        logging.info("AGOL folder: " + folder_name)
+        arcpy.mp.CreateWebLayerSDDraft(m, draft_sd, service_name, 'MY_HOSTED_SERVICES', 'FEATURE_ACCESS', folder_name, enable_editing = edit_enabled, allow_exporting = export_enabled, summary=itemsummary, tags = itemtags, credits = itemcredits, use_limitations = itemuselimits)
+        logging.info("Created draft sd")
+        arcpy.StageService_server(draft_sd, final_sd)
+        logging.info("Staged service") 
+    except:
+        logging.info(arcpy.GetMessages())
+        sys.exit()
 
     #Push sd file to AGOL
     gis = GIS(agol_url, agol_user, agol_pass)
@@ -129,8 +142,9 @@ def createSD_and_overwrite(aprx_file, map_name, draft_sd, service_name, folder_n
         sd_item = sd_items[0]
         updatesuccess = sd_item.update({},final_sd)
         if updatesuccess:
-            sd_item.publish(publish_parameters=pub_params, overwrite="true")           
+            sd_item.publish(publish_parameters=pub_params, overwrite="true")
+            logging.info("SD file published")           
     else:    
-        print("SD item not found. \nMake sure a sd file exists.")
+        logging.info("SD item not found. \nMake sure a sd file exists.")
         sys.exit() 
  

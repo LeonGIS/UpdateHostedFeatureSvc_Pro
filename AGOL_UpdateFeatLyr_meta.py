@@ -134,11 +134,14 @@ if __name__ == "__main__":
 
     # Read XML file
     metadatalist =  modAGOL.metadata_to_list(xmlMetaFile, inthumbnail)
-
+    logging.info("Read metadata file")
+     
     # Create function
-    modAGOL.createSD_and_overwrite(APRX_FILE, MAP_NAME, draftSD, serviceName, folderName, blnediting, blnexport, metadatalist[0], metadatalist[2],  metadatalist[1], metadatalist[3], finalSD, inputURL, inputUsername, inputPswd, SD_Id)
-   
-    logging.info("Created SD and published") 
+    try:
+        modAGOL.createSD_and_overwrite(APRX_FILE, MAP_NAME, draftSD, serviceName, folderName, blnediting, blnexport, metadatalist[0], metadatalist[2],  metadatalist[1], metadatalist[3], finalSD, inputURL, inputUsername, inputPswd, SD_Id)
+    except:
+        logging.info("createSD_and_overwrite failed") 
+        sys.exit(1)
 
    # Get description from html file..... open at last possible time
     htmlopen = codecs.open(htmldescFile, 'r', 'utf-8')  
