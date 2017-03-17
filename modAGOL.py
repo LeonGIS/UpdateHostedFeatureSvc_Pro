@@ -21,51 +21,75 @@ import logging
 def metadata_to_list(metadatafile, thumbpath):
     insummary = ""
     incredits = ""
-    intags = ""
-    inuselimit = ""
+    #intags = ""
+   # inuselimit = ""
+    logging.info("Start metadata_to_list") 
 
     #Get metadata from xml file
     xmlparser = ET.XMLParser(encoding="UTF-8")
     tree = ET.parse(metadatafile, parser=xmlparser)
     root = tree.getroot()
     dataIdInfo = root.find('dataIdInfo')
-    metasummary = dataIdInfo.find('idPurp')
-    insummary = metasummary.text
-     
-    metacredits = dataIdInfo.find('idCredit')
-    incredits = metacredits.text
+
+    try:
+        metasummary = dataIdInfo.find('idPurp')
+        insummary = metasummary.text
+    except:
+        metasummary = 'There is no summary for this item.' 
+        logging.info("Metadata missing purpose")     
     
+    logging.info("Metadata - Purpose")  
+    
+    try:
+        metacredits = dataIdInfo.find('idCredit')
+        incredits = metacredits.text
+    except:
+        metacredits = 'There is not credit information for this item.' 
+        logging.info("Metadata missing purpose")    
+        
+    logging.info("Metadata - credits") 
+
     # Create tags
     intags = ''
-    metaTags = dataIdInfo.find('searchKeys')
-    for keyword in metaTags.findall('keyword'):
-        if intags == '':
-            intags = keyword.text
-        else:
-            intags = intags + "," + keyword.text
-    
+    try:
+        metaTags = dataIdInfo.find('searchKeys')
+        for keyword in metaTags.findall('keyword'):
+            if intags == '':
+                intags = keyword.text
+            else:
+                intags = intags + "," + keyword.text
+    except:
+        logging.info("Metadata missing tags") 
+    logging.info("Metadata - tags") 
+
     inuselimit = ''
     # Create constraints from Use and then Legal
-    for resconst in dataIdInfo.findall('resConst'):
-        for const in resconst.findall('Consts'):
-            UseConst = const.find('useLimit')
-            if inuselimit == '':
-                inuselimit = UseConst.text
-            else:
-                inuselimit = inuselimit + "\n" + UseConst.text
+    try:
+        for resconst in dataIdInfo.findall('resConst'):
+            for const in resconst.findall('Consts'):
+                UseConst = const.find('useLimit')
+                if inuselimit == '':
+                    inuselimit = UseConst.text
+                else:
+                    inuselimit = inuselimit + "\n" + UseConst.text
+    except:
+        logging.info("Metadata missing use limits") 
 
-    for resconst in dataIdInfo.findall('resConst'):
-        for const in resconst.findall('LegConsts'):
-            LegalConst = const.find('othConsts')
-            if inuselimit == '':
-                inuselimit = LegalConst.text
-            else:
-                inuselimit = inuselimit + "\n" + LegalConst.text
-     
+    try:
+        for resconst in dataIdInfo.findall('resConst'):
+            for const in resconst.findall('LegConsts'):
+                LegalConst = const.find('othConsts')
+                if inuselimit == '':
+                    inuselimit = LegalConst.text
+                else:
+                    inuselimit = inuselimit + "\n" + LegalConst.text
+    except:
+        logging.info("Metadata missing legal constraints") 
+         
     if inuselimit == '':
         inuselimit = 'There are not access and use constraints for this item.'  
     
-   
+    logging.info("Metadata - use limits") 
 
     thumbdata = root.findall("Binary/Thumbnail/Data")
     if thumbdata:
@@ -73,7 +97,7 @@ def metadata_to_list(metadatafile, thumbpath):
         with open(thumbpath,"wb") as f:
             f.write(base64.b64decode(metathumbnail))
 
-    
+    logging.info("Metadata - thumbnail") 
         
                    
     metadatalist = [insummary,incredits,intags,inuselimit]

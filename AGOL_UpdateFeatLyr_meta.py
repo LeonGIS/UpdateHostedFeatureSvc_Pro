@@ -32,7 +32,7 @@ from sympy import true
 if __name__ == "__main__":
      # Set up logging
     LOG_FILENAME = '.\AGOL_UpdateFeatLyr_meta.log'
-    logging.basicConfig(level=logging.INFO,
+    logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)-8s %(message)s',
                     datefmt='%a, %d %b %Y %H:%M:%S',
                     filename=LOG_FILENAME,
@@ -61,16 +61,19 @@ if __name__ == "__main__":
     else:
         logging.info("No options found. Syntax: update.py -i <inputfile> -d <descfile> -x <xmlfile>")
         sys.exit(2)
+    logging.info("Read options")
 
     # Get metadata files
     if not os.path.isfile(htmldescFile) or not os.path.isfile(xmlMetaFile): 
         print("Input metadata file not found. \nMake sure a valid settings files exists.")
         sys.exit()
-    
+    logging.info("Found metadata files")
+
     # Get ini settings file
     if not os.path.isfile(settingsFile): 
         logging.info("Input file not found. \nMake sure a valid settings file exists.")
         sys.exit()
+    logging.info("Found settings file")
 
     with open(settingsFile) as fp:
         config = configparser.ConfigParser()
@@ -107,7 +110,8 @@ if __name__ == "__main__":
         if sharegroups is None:
             sharegroups = ''
         fp.close()
-    
+    logging.info("Read settings file")
+
     #get ArcPro project & map
     if not os.path.isfile(APRX_FILE): 
         logging.info("ArcGIS project file not found. \nMake sure a valid file exists.")
