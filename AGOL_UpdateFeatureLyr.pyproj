@@ -17,7 +17,7 @@
     <InterpreterVersion>3.5</InterpreterVersion>
     <IsWindowsApplication>False</IsWindowsApplication>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-i "C:\development\Python\UpdateHostedFeatureSvc_Pro\settings_inputfiles.ini" -d "C:\development\Python\Metadata_Export\Output\RoadCenterline.html" -x "C:\development\Python\Metadata_Export\Output\RoadCenterline.xml"</CommandLineArguments>
+    <CommandLineArguments>-i "Z:\GIS_Scripts\UpdateHostedFeatureSvc_Pro\TaxParcels_Organization_test.ini" -d "Z:\GIS_Scripts\Workspace\Metadata_Export\TaxParcels.html" -x "Z:\GIS_Scripts\Workspace\Metadata_Export\TaxParcels.xml"</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -29,9 +29,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AGOL_UpdateItemInfo.py" />
     <Compile Include="AGOL_UpdateFeatLyr_meta.py" />
     <Compile Include="AGOL_UpdateFeatLyr.py" />
-    <Compile Include="AGOL_UpdateItemInfo.py">
+    <Compile Include="oldAGOL_UpdateItemInfo.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="modAGOL.py">

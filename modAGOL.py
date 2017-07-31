@@ -125,6 +125,24 @@ def update_featureservice(itemsummary, itemcredits, itemuselimits, itemtags, ite
         if shared:
             fs_item.share(everyone = share_everyone, org = share_org, groups = share_groups)
 
+# Function: update_iteminfo
+# Description: Update feature service item information
+def update_iteminfo(itemsummary, itemcredits, itemuselimits, itemtags, itemdesc, itemthumb_file, itemid, agol_url, agol_user, agol_pass):
+    item_properties = {"snippet": itemsummary,
+                       "description": itemdesc,
+                       "accessInformation": itemcredits,
+                       "licenseInfo": itemuselimits,
+                       "tags": itemtags
+    }   
+
+    gis = GIS(agol_url, agol_user, agol_pass)
+    fs_items = gis.content.search("id:" + itemid, item_type="Feature Service")
+    if fs_items:
+        fs_item = fs_items[0]
+        if os.path.isfile(itemthumb_file):
+            fs_item.update(item_properties, thumbnail = itemthumb_file)
+        else:
+            fs_item.update(item_properties)
 
 # Function: createSD_and_overwrite
 # Description: Creates a SD file from ArcGIS Pro, then updates an existing SD file in ArcGIS Online.  The new SD file is published.
