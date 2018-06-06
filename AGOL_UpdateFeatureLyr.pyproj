@@ -13,11 +13,11 @@
     <OutputPath>.</OutputPath>
     <Name>AGOL_UpdateFeatureLyr</Name>
     <RootNamespace>UpdateHostedFeatureSvc_Pro</RootNamespace>
-    <InterpreterId>{f9fe2f37-be6a-4b30-82e5-2f067e4283c2}</InterpreterId>
+    <InterpreterId>{96aa2b18-31c1-4c99-9b09-7379b29254a3}</InterpreterId>
     <InterpreterVersion>3.5</InterpreterVersion>
     <IsWindowsApplication>False</IsWindowsApplication>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-i "Z:\GIS_Scripts\UpdateHostedFeatureSvc_Pro\TaxParcels_Organization_test.ini" -d "Z:\GIS_Scripts\Workspace\Metadata_Export\TaxParcels.html" -x "Z:\GIS_Scripts\Workspace\Metadata_Export\TaxParcels.xml"</CommandLineArguments>
+    <CommandLineArguments>-i "Z:\GIS_Scripts\UpdateHostedFeatureSvc_Pro\FacilitySitePoints.ini" -d "Z:\GIS_Scripts\Workspace\Metadata_Export\FacilitySitePoint.html" -x "Z:\GIS_Scripts\Workspace\Metadata_Export\FacilitySitePoint.xml"</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -40,8 +40,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <InterpreterReference Include="{9a7a9026-48c1-4688-9d5d-e5699d47d074}\3.4" />
-    <InterpreterReference Include="{f9fe2f37-be6a-4b30-82e5-2f067e4283c2}\3.5" />
+    <InterpreterReference Include="{96aa2b18-31c1-4c99-9b09-7379b29254a3}\3.5" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

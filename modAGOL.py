@@ -1,4 +1,4 @@
-# ---------------------------------------------------------------------------
+﻿# ---------------------------------------------------------------------------
 # modAGOL.py
 # Created on: 1/11/2017
 # Leon Scott, Town of Easton, MA
@@ -23,6 +23,8 @@ def metadata_to_list(metadatafile, thumbpath):
     incredits = ""
     #intags = ""
    # inuselimit = ""
+    intitle = ""
+
     logging.info("Start metadata_to_list") 
 
     #Get metadata from xml file
@@ -30,6 +32,17 @@ def metadata_to_list(metadatafile, thumbpath):
     tree = ET.parse(metadatafile, parser=xmlparser)
     root = tree.getroot()
     dataIdInfo = root.find('dataIdInfo')
+
+    #Get name of dataset
+    try:
+        metacitation = dataIdInfo.find('idCitation')
+        metatitle = metacitation.find('resTitle')
+        intitle = metatitle.text
+    except:
+        metatitle = 'There is not title for this item.'
+        logging.info("Metadata missing title")   
+         
+    logging.info("Metadata - Title")  
 
     try:
         metasummary = dataIdInfo.find('idPurp')
@@ -100,14 +113,15 @@ def metadata_to_list(metadatafile, thumbpath):
     logging.info("Metadata - thumbnail") 
         
                    
-    metadatalist = [insummary,incredits,intags,inuselimit]
+    metadatalist = [intitle, insummary,incredits,intags,inuselimit]
     return metadatalist
 
 
 # Function: update_featureservice
 # Description: Update feature service item information and sharing
-def update_featureservice(itemsummary, itemcredits, itemuselimits, itemtags, itemdesc, itemthumb_file, itemid, agol_url, agol_user, agol_pass, shared, share_everyone, share_org, share_groups):
-    item_properties = {"snippet": itemsummary,
+def update_featureservice(itemtitle, itemsummary, itemcredits, itemuselimits, itemtags, itemdesc, itemthumb_file, itemid, agol_url, agol_user, agol_pass, shared, share_everyone, share_org, share_groups):
+    item_properties = {"title": itemtitle,
+                        "snippet": itemsummary,
                        "description": itemdesc,
                        "accessInformation": itemcredits,
                        "licenseInfo": itemuselimits,
@@ -190,3 +204,27 @@ def createSD_and_overwrite(aprx_file, map_name, draft_sd, service_name, folder_n
         logging.info("SD item not found. \nMake sure a sd file exists.")
         sys.exit() 
  
+def createSDfile(aprx_file, map_name, draft_sd, service_name, folder_name, edit_enabled, export_enabled, 
+                           itemsummary, itemtags, itemcredits, itemuselimits, final_sd):
+    logging.info("Start createSD_and_overwrite") 
+    aprx = arcpy.mp.ArcGISProject(aprx_file)
+    
+    maplist = aprx.listMaps(map_name)
+    if not maplist:
+        logging.info("Map not found in ArcGIS project file. \nMake sure a valid map exists.")
+        sys.exit()             
+    m = maplist[0]
+    logging.info("Map found")
+
+    # create sd file
+    try:
+        logging.info("SDDraft: " + draft_sd)
+        logging.info("Service: " + service_name)
+        logging.info("AGOL folder: " + folder_name)
+        arcpy.mp.CreateWebLayerSDDraft(m, draft_sd, service_name, 'MY_HOSTED_SERVICES', 'FEATURE_ACCESS', folder_name, enable_editing = edit_enabled, allow_exporting = export_enabled, summary=itemsummary, tags = itemtags, credits = itemcredits, use_limitations = itemuselimits)
+        logging.info("Created draft sd")
+        arcpy.StageService_server(draft_sd, final_sd)
+        logging.info("Staged service") 
+    except:
+        logging.info(arcpy.GetMessages())
+        sys.exit()

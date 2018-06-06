@@ -1,4 +1,4 @@
-# ---------------------------------------------------------------------------
+﻿# ---------------------------------------------------------------------------
 # AGOL_UpdateFeatLyr_meta.py
 # Created on: 1/3/2017
 # Leon Scott, Town of Easton, MA
@@ -153,7 +153,10 @@ if __name__ == "__main__":
     htmlopen.close()
 
     #Update item information
-    modAGOL.update_featureservice(metadatalist[0], metadatalist[1], metadatalist[3], metadatalist[2], htmldesc, inthumbnail, serviceId, inputURL, inputUsername, inputPswd, shared,
+    #Check for blank title in metadata...can't have that!
+    if metadatalist[0] == '':
+        metadatlist[0] = serviceName
+    modAGOL.update_featureservice(metadatalist[0], metadatalist[1], metadatalist[2], metadatalist[4], metadatalist[3], htmldesc, inthumbnail, serviceId, inputURL, inputUsername, inputPswd, shared,
                              shareeveryone, shareorgs, sharegroups)
    
     logging.info("Updated feature service")
